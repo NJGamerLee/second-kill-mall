@@ -1,0 +1,117 @@
+spring:
+  #静态资源处理
+  web:
+    resources:
+      add-mappings: true
+      cache:
+        cachecontrol:
+          #缓存时间 s
+          max-age: 3600
+      chain:
+        # 资源链开启缓存
+        cache: true
+        #启动资源链
+        enabled: true
+        #压缩资源 gzip
+        compressed: true
+      static-locations: classpath:/static/
+
+# thymeleaf配置
+  thymeleaf:
+    # 关闭缓存
+    cache: false
+#    prefix: classpath:/templates/
+#      mode: HTML
+#      encoding: UTF-8
+#      #     新版本不支持content-type: text/html，故新写法
+#      servlet:
+#        content-type: text/html
+
+#redis配置
+  redis:
+    host: 192.168.28.128
+#   password: 123456
+    port: 6379
+    database: 0
+    connect-timeout: 10000ms
+    lettuce:
+      pool:
+#        最大连接数
+        max-active: 8
+#        最大等待时间
+        max-wait: 10000ms
+#        最大空闲连接时间
+        max-idle: 200
+        min-idle: 5
+
+  #RabbitMQ
+  rabbitmq:
+    host: 192.168.28.130
+    username: guest
+    password: guest
+    #虚拟主机
+    virtual-host: /
+    port: 5672
+    listener:
+      simple:
+        #消费者最小数量
+        concurrency: 10
+        #最大数量
+        max-concurrency: 10
+        #限制消费者每次只能处理1条消息
+        prefetch: 1
+        #默认启动容器
+        auto-startup: true
+        #被拒绝时重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        #发布重试
+        enabled: true
+        #重试时间
+        initial-interval: 1000ms
+        #重试最大次数
+        max-attempts: 3
+        #重试最大时间间隔
+        max-interval: 10000ms
+        #重试间隔的乘数
+        multiplier: 1
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seckill
+    username: root
+    password: root1234
+    hikari:
+      #连接池名
+      pool-name: DateHikariCP
+      # 最小空闲连接出
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000(10分钟)
+      idle-timeout: 600000
+      #最大连接数，默认10
+      maximum-pool-size: 10
+      # 从连接池返回的连接自动提交
+      auto-commit: true
+      # 连接最大存活时间，0表示永久存活，默认1800000(30分钟)
+      max-lifetime: 1800000
+      # 连接超时时间，默认30000(30秒)
+      connection-timeout: 30000
+      # 测试连接是否可用的查询语句
+      connection-test-query: SELECT 1
+
+#Mybatis-plus配置
+mybatis-plus:
+  # 配置Mapper.xml映射文件
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  # 配置MyBatis数据返回类型别名(默认别名是类名)
+  type-aliases-package: com.liyuhua.seckill.pojo
+
+
+# MyBatis SQL打印(方法接口所在的包，不是Mapper.xml所在的包)
+logging:
+  level:
+    com.liyuhua.seckill.mapper: debug
+server:
+  port: 8080
